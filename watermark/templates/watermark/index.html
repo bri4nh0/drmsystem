@@ -1,0 +1,125 @@
+{% extends "watermark/base.html" %}
+{% block content %}
+
+<div class="container">
+    <form method='GET'>
+        <div class="input-group mb-3 border-primary ">
+            <input type="text" class="form-control" name="name" placeholder="Search for files" aria-label="File Name" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#imageModal">
+                  Upload Image
+                </button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#fileModal">
+                  Upload File
+                </button>
+            </div>
+        </div>
+    </form>
+    <br>
+    {% if name %}
+    <h3 class="text">Search results for <b class="">"{{ name }}"</b>:</h3>
+    {% endif %}
+
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="imageModalLabel">Upload your Image here:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+            <form method="POST" enctype="multipart/form-data">
+              <div class="modal-body">
+                {% csrf_token %}
+                {{ image_form }}
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" value="Submit">Upload Image</button>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="fileModalLabel">Upload your File here:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+            <form method="POST" enctype="multipart/form-data">
+              <div class="modal-body">
+                {% csrf_token %}
+                {{ file_form }}
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" value="Submit">Upload File</button>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="card-columns text-center">
+        {% for file in object_list %}
+            <a href="{% url 'image-detail' file.pk %}">
+            <div class="card border-primary mb-3" style="padding: 0px;">
+                <h5 class="card-header">{{file.name}}</h5>
+                <img class="card-img-top" src="{{ file.image.url }}" alt="Card image cap">
+            </div>
+            </a>
+            <br>
+        {% empty %}
+            <h5>No files yet.</h5>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+<br>
+<div class="container d-flex justify-content-center">
+    {% if name %}
+    {% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a href="?name={{ name }}&page=1" class="btn btn-outline-primary mb-4">First</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a href="?name={{ name }}&page={{ num }}" class="btn btn-primary mb-4">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?name={{ name }}&page={{ num }}" class="btn btn-outline-primary mb-4">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?name={{ name }}&page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary mb-4">Last</a>
+    {% endif %}
+    {% endif %}
+    {% else %}
+
+    {% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a href="?page=1" class="btn btn-outline-primary mb-4">First</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a href="?page={{ num }}" class="btn btn-primaryg mb-4">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}" class="btn btn-outline-primary mb-4">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary mb-4">Last</a>
+    {% endif %}
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock content %}

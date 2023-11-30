@@ -1,0 +1,18 @@
+{% extends "watermark/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container text-center">
+    <div class="border-primary mb-3" style="padding: 0px;">
+        <h5 class="card-header">{{ object.name }} - {{ object.created }}<span class="badge badge-primary">Image</span></h5>
+        <div class="card-body">
+            <img class="card-img-top" src="{{ object.image.url }}" alt="Card image cap">
+            <button class="btn">
+                <a href="{% url 'delete_image' object.pk %}">
+                    Delete image
+                </a>
+            </button>
+        </div>
+    </div>
+    <br>
+</div>
+{% endblock content %}

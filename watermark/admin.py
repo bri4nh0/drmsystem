@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from watermark.models import ImageFile, File
+
+admin.site.register(ImageFile)
+admin.site.register(File)

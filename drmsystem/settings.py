@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'watermark'
+    'watermark',
+    'crispy_bootstrap4',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +124,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_DIR = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'media'
+STATIC_DIR = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'static'
